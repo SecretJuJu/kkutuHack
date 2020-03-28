@@ -74,7 +74,6 @@ while True:
                         overlap = False
                         input_word = ""
                         if '(' in lastWord:
-
                             str = lastWord
                             str = str.split('(')
                             tmp = 0
@@ -102,13 +101,13 @@ while True:
                             else:
                                 i = 1
                                 while True:  # searching word
-                                    print(db[lastWord][i])
                                     if i > len(db[lastWord]):
                                         input_word = "GG"
                                         break
                                     if db[lastWord][i] in history:
                                         i += 1
                                     else:
+                                        print(db[lastWord][i])
                                         input_word = db[lastWord][i]
                                         break
                         #print("input word is : " + str(input_word))
@@ -117,4 +116,5 @@ while True:
                         input_box.send_keys(input_word)
                         chat_btn = driver.find_element_by_css_selector('#ChatBtn')
                         chat_btn.click()
+                        history.append(input_word)
             time.sleep(1)
