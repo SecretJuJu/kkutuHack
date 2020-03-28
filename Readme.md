@@ -16,6 +16,8 @@
   
     You can only use the word chain. ( English word chain is also possible. )
   
+    input your chromedriver path to driverpath.txt (ex for_window/dist/driverpath.txt)
+  
     Another function is later~~~~
   
 ## how to run
