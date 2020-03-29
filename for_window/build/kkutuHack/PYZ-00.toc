@@ -1027,15 +1027,14 @@
    'c:\\users\\secret\\local settings\\application '
    'data\\Programs\\Python\\Python38\\lib\\os.py',
    'PYMODULE'),
-  ('stringprep',
-   'c:\\users\\secret\\local settings\\application '
-   'data\\Programs\\Python\\Python38\\lib\\stringprep.py',
-   'PYMODULE'),
   ('_py_abc',
    'c:\\users\\secret\\local settings\\application '
    'data\\Programs\\Python\\Python38\\lib\\_py_abc.py',
    'PYMODULE'),
-  ('db', 'Z:\\home\\secret\\PycharmProjects\\kkutu\\db.py', 'PYMODULE'),
+  ('stringprep',
+   'c:\\users\\secret\\local settings\\application '
+   'data\\Programs\\Python\\Python38\\lib\\stringprep.py',
+   'PYMODULE'),
   ('json',
    'c:\\users\\secret\\local settings\\application '
    'data\\Programs\\Python\\Python38\\lib\\json\\__init__.py',

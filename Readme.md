@@ -6,9 +6,7 @@
 
     chrome driver (important)
 
-    if you are using window please execute version_check.bat
-
-    if you are using linux ~~
+    chromeDriver.(sh/bat) <= check version & link to download page
 
 ## precautions
 
@@ -21,12 +19,6 @@
     Another function is later~~~~
   
 ## how to run
-
-  code
-   
-    kkutuHack.py
-    
-    dbInitialization.py <=  insert the word 'db.txt' into 'db.py' (formating : dict) 
 
   how to run
 
@@ -45,4 +37,11 @@
     join / make (room that playing word chain room)
     
     input "ready" in console
-  
+
+## adding words
+   
+    Add a word to 'db.txt'
+     
+ and
+     
+    a word to exclude from 'no_list.txt' 

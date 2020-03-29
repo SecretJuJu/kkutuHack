@@ -2,21 +2,57 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import json
 import time
-from db import db
 
-print(db)
 url = "https://kkutu.co.kr/"
 
-driver = webdriver.Chrome()
-driver.get(url)
+f = open("driverpath.txt","r")
+driverPath = f.readline()
+print("driverPath")
+print(driverPath)
 
+def errorMsg(e):
+    print(str(e))
+    print("Please copy this error and comment on GitHub.")
+
+def updateDb() :
+    f = open("db.txt", 'r')
+    n_l = open("no_list.txt",'r')
+    no_list = []
+    db = {}
+    while True:
+        no = n_l.readline()
+        if not no: break
+        no_list.append(no)
+
+    n_l.close()
+    i = 0
+    while True:
+        line = f.readline()
+        line=line.split(' ')[0]
+        if not line: break
+
+        if len(line) <= 1:
+            continue
+
+        if not(line[0] in db.keys()):
+            db.update({line[0] : [line]})
+        else :
+            if not ("(어인정)" in line or "{끄투 코리아}" in line):
+                if not line in no_list:
+                    line = line.replace(" ","")
+                    line = line.replace("\n", "")
+                    line = line.strip()
+                    db[line[0]].append(line)
+                    print(line)
+    f.close()
+    return db
 
 def login(driver):
     # login button : .account-nick
     loginBtn = driver.find_element_by_class_name('account-nick')
     print(loginBtn)
     loginBtn.click()
-    print("complete your login!")
+    print("Please complete the login")
     html = ""
     while True:
         ready = input("input 'ready' when your login is done\n >>>>>>>>>>>>")
@@ -29,6 +65,14 @@ def login(driver):
     user_info = json.loads(user_info)
     return user_info
 
+db = updateDb()
+
+try :
+    driver = webdriver.Chrome()
+    driver.get(url)
+except Exception as e:
+    driver = webdriver.Chrome(driverPath)
+    driver.get(url)
 
 user_info = login(driver)  # data type json
 print("join your room")
@@ -49,6 +93,8 @@ while True:
             for p_l in player_list:
                 # id : game-user-142191361 : class : game-user game-user-current
                 player_attribute_dict = {'class': p_l.get_attribute("class"), 'id': p_l.get_attribute("id")}
+                if 'game-user-bomb' in player_attribute_dict['class']:
+                    history = []
 
                 if 'game-user-current' in player_attribute_dict['class']:
                     if player_attribute_dict['id'].split('-')[2] == user_info['id']:  # player turn
@@ -66,8 +112,9 @@ while True:
                                 tmp.append(h.text)
                             readHistory = tmp
                             history.extend(readHistory)
-                        except AttributeError:
+                        except AttributeError as e:
                             history = []
+                            errorMsg(e)
                         # print("------- history -------")
                         # print(history)
 
@@ -77,44 +124,52 @@ while True:
                             str = lastWord
                             str = str.split('(')
                             tmp = 0
-                            for s in str:
-                                s = s.replace(')', '')
-                                if not (s in db.keys()):
-                                    print("there is no word in db start with " + s)
-                                else:
-                                    i = 1
-                                    while True:  # searching word
-                                        if i >= len(db[s]) and tmp != 0:
-                                            input_word = "GG"
-                                            break
-                                        if db[s][i] in history:
-                                            i += 1
-                                        else:
-                                            input_word = db[s][i]
-                                            break
-                                        print(db[s][i])
-                                tmp += 1
+                            try :
+                                for s in str:
+                                    s = s.replace(')', '')
+                                    if not (s in db.keys()):
+                                        print("there is no word in db start with " + s)
+                                    else:
+                                        i = 0
+                                        while True:  # searching word
+                                            if i >= len(db[s]) and tmp != 0:
+                                                input_word = "GG"
+                                                break
+                                            if db[s][i] in history:
+                                                i += 1
+                                            else:
+                                                input_word = db[s][i]
+                                                print(db[s][i])
+                                                break
+                                    tmp += 1
+                            except e as e:
+                                errorMsg(e)
+                                continue
 
                         else :
-                            if not (lastWord in db.keys()):
-                                print("there is no word in db start with " + lastWord)
-                            else:
-                                i = 1
-                                while True:  # searching word
-                                    if i > len(db[lastWord]):
-                                        input_word = "GG"
-                                        break
-                                    if db[lastWord][i] in history:
-                                        i += 1
-                                    else:
-                                        print(db[lastWord][i])
-                                        input_word = db[lastWord][i]
-                                        break
-                        #print("input word is : " + str(input_word))
+                            try:
+                                if not (lastWord in db.keys()):
+                                    print("there is no word in db start with " + lastWord)
+                                else:
+                                    i = 0
+                                    while True:  # searching word
+                                        if i > len(db[lastWord]):
+                                            input_word = "GG"
+                                            break
+                                        if db[lastWord][i] in history:
+                                            i += 1
+                                        else:
+                                            print(db[lastWord][i])
+                                            input_word = db[lastWord][i]
+                                            break
+                            except e as e:
+                                errorMsg(e)
+                                continue
+
                         lastWordTemp = lastWord
                         input_box = driver.find_element_by_css_selector('.product-body>input')
                         input_box.send_keys(input_word)
                         chat_btn = driver.find_element_by_css_selector('#ChatBtn')
                         chat_btn.click()
                         history.append(input_word)
-            time.sleep(1)
+            time.sleep(0.5)
