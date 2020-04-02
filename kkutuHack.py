@@ -2,7 +2,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import json
 import time
-
+import re
 url = "https://kkutu.co.kr/"
 
 f = open("driverpath.txt","r")
@@ -30,6 +30,8 @@ def updateDb() :
         line = f.readline()
         line=line.split(' ')[0]
         if not line: break
+
+        line = re.sub('[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]', '', line)
 
         if len(line) <= 1:
             continue
