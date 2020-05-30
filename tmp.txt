@@ -1,0 +1,35 @@
+
+def updateDb() :
+    f = open("db.txt", 'r')
+    n_l = open("no_list.txt",'r')
+    no_list = []
+    db = {}
+    while True:
+        no = n_l.readline()
+        if not no: break
+        no_list.append(no)
+
+    n_l.close()
+    i = 0
+    while True:
+        line = f.readline()
+        line=line.split(' ')[0]
+        if not line: break
+
+        line = re.sub('[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]', '', line)
+
+        if len(line) <= 1:
+            continue
+
+        if not(line[0] in db.keys()):
+            db.update({line[0] : [line]})
+        else :
+            if not ("(어인정)" in line or "{끄투 코리아}" in line):
+                if not line in no_list:
+                    line = line.replace(" ","")
+                    line = line.replace("\n", "")
+                    line = line.strip()
+                    db[line[0]].append(line)
+                    print(line)
+    f.close()
+    return db
